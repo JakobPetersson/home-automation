@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  deconz:
+    image: marthoc/deconz
+    container_name: deconz
+    restart: always
+    volumes:
+      - type: bind
+        source: ./deconz
+        target: /root/.local/share/dresden-elektronik/deCONZ
+    devices:
+      - /dev/ttyACM0:/dev/ttyAMA0
+    ports:
+      - 8080:8080
+      - 8443:8443
+    environment:
+      DECONZ_WEB_PORT: 8080
+      DECONZ_WS_PORT: 8443
+      DEBUG_INFO: 1
+      DEBUG_APS: 0
+      DEBUG_ZCL: 0
+      DEBUG_ZDP: 
+      DEBUG_OTAU: 
+      DECONZ_DEVICE: /dev/ttyAMA0
+      TZ: Europe/Stockholm
+      DECONZ_VNC_MODE: 0
+      DECONZ_VNC_PORT: 5900
+      DECONZ_VNC_PASSWORD: changeme
+      DECONZ_UPNP: 0
+
+  home-assistant:
+    image: homeassistant/raspberrypi4-homeassistant:stable
+    container_name: home-assistant
+    restart: always
+    network_mode: host
+    volumes:
+      - type: bind
+        source: ./home-assistant
+        target: /config
+    environment:
+      TZ: Europe/Stockholm
