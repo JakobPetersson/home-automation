@@ -28,14 +28,14 @@ services:
       DECONZ_VNC_PASSWORD: changeme
       DECONZ_UPNP: 0
 
-  home-assistant:
+  hass:
     image: homeassistant/raspberrypi4-homeassistant:stable
-    container_name: home-assistant
+    container_name: hass
     restart: always
     network_mode: host
     volumes:
       - type: bind
-        source: ./home-assistant
+        source: ./hass
         target: /config
     environment:
       TZ: Europe/Stockholm
