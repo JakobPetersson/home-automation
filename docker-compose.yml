@@ -42,3 +42,19 @@ services:
         target: /config
     environment:
       TZ: Europe/Stockholm
+
+  appdaemon:
+    build: appdaemon-git
+    container_name: appdaemon
+    restart: always
+    volumes:
+      - type: bind
+        source: ./appdaemon
+        target: /conf
+    ports:
+      - 5050:5050
+    env_file:
+      - ./appdaemon.env
+    environment:
+      HA_URL: http://rpi-home:8123
+      DASH_URL: http://rpi-home:5050
