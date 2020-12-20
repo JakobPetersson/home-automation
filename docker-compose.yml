@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   deconz:
-    image: marthoc/deconz
+    image: marthoc/deconz:arm64-2.07.01
     container_name: deconz
     restart: always
     volumes:
