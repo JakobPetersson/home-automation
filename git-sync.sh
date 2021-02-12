@@ -36,7 +36,8 @@ git_sync() {
   echo "Pulling"
   git pull
 
-  touch test
+  echo "Updating containers"
+  ./dev.sh start
 }
 
 git_sync
