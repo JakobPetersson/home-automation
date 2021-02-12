@@ -1,6 +1,8 @@
 # home-automation
 
+Configuration and setup for my Home Automation project.
 
+I currently have this running on a Raspberry PI 4 (4GB).
 
 ## Setup
 
