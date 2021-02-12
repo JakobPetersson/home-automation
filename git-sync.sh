@@ -4,7 +4,7 @@ set -eou > /dev/null
 
 THIS_DIR=$(cd "$(dirname "$0")"; pwd -P)
 
-cd "${THIS_DIR}/.."
+cd "${THIS_DIR}"
 
 readonly LOCAL_BRANCH=main
 readonly REMOTE_BRANCH=origin/main
