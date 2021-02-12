@@ -11,17 +11,6 @@ git_local_changes() {
   [ "${CHANGED_FILES}" -gt 0 ]
 }
 
-git_fetch() {
-  git fetch
-}
-
-git_branches_differ() {
-  local BRANCH_A="${1}"
-  local BRANCH_B="${2}"
-
-  git diff --exit-code "${BRANCH_A}" "${BRANCH_B}" > /dev/null
-}
-
 git_sync() {
   if git_local_changes; then
     echo "There are local changes, skipping sync"
@@ -30,15 +19,18 @@ git_sync() {
 
   echo "There are no local changes"
 
-  git_fetch
+  echo "Fetching"
+  git fetch
 
-  if git_branches_differ "${LOCAL_BRANCH}" "${REMOTE_BRANCH}"; then
+  if git diff --exit-code "${LOCAL_BRANCH}" "${REMOTE_BRANCH}" > /dev/null; then
     echo "Local branch equals remote branch"
     exit 0
   fi
 
   echo "Local branch differs from remote"
 
+  echo "Pulling"
+  git pull
 }
 
 git_sync
