@@ -6,10 +6,10 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: ./deconz
+        source: ./containers/deconz/config
         target: /root/.local/share/dresden-elektronik/deCONZ
       - type: bind
-        source: ./deconz-otau
+        source: ./containers/deconz/otau-config
         target: /root/otau
     devices:
        - /dev/ttyACM0
@@ -38,7 +38,7 @@ services:
     network_mode: host
     volumes:
       - type: bind
-        source: ./hass
+        source: ./containers/hass/config
         target: /config
     environment:
       TZ: Europe/Stockholm
@@ -49,7 +49,7 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: ./appdaemon
+        source: ./containers/appdaemon/config
         target: /conf
     ports:
       - 5050:5050
