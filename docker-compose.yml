@@ -54,7 +54,7 @@ services:
     ports:
       - 5050:5050
     env_file:
-      - ./appdaemon.env
+      - ./containers/appdaemon/appdaemon.env
     environment:
       HA_URL: http://rpi-home:8123
       DASH_URL: http://rpi-home:5050
