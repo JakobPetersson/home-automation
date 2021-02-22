@@ -44,7 +44,7 @@ services:
       TZ: Europe/Stockholm
 
   appdaemon:
-    build: appdaemon-git
+    build: containers/appdaemon/appdaemon-git
     container_name: appdaemon
     restart: always
     volumes:
