@@ -15,6 +15,10 @@ git_local_changes() {
   [ "${CHANGED_FILES}" -gt 0 ]
 }
 
+git_sync_log() {
+  echo "$(date --iso-8601=seconds) | ${1}" >> "${THIS_DIR}/git-sync.log"
+}
+
 git_sync() {
   if git_local_changes; then
     echo "There are local changes, skipping sync"
@@ -35,6 +39,8 @@ git_sync() {
 
   echo "Pulling"
   git pull
+  
+  git_sync_log "Updated from git"
 
   echo "Updating containers"
   ./dev.sh start
