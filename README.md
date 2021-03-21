@@ -15,3 +15,7 @@ Checkout this repository and run `setup.sh` to install docker and configure usb 
 ## dev.sh
 
 `dev.sh` is a simple utility to control the Docker Compose setup.
+
+## git-sync.sh
+
+`git-sync.sh` is a small script for syncing code updates from git.
