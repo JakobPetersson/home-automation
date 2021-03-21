@@ -44,6 +44,8 @@ git_sync() {
 
   echo "Updating containers"
   ./dev.sh start
+  
+  git_sync_log "Containers restarted"
 }
 
 git_sync
