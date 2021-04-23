@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   deconz:
-    image: marthoc/deconz:arm64-2.10.03
+    image: marthoc/deconz:arm64-2.11.00
     container_name: deconz
     restart: always
     volumes:
@@ -32,7 +32,7 @@ services:
       DECONZ_UPNP: 0
 
   hass:
-    image: homeassistant/raspberrypi4-homeassistant:2021.3.4
+    image: homeassistant/raspberrypi4-homeassistant:2021.4.6
     container_name: hass
     restart: always
     network_mode: host
