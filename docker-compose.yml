@@ -1,36 +1,5 @@
 version: "3.8"
 services:
-  deconz:
-    image: marthoc/deconz:arm64-2.12.00
-    container_name: deconz
-    restart: always
-    volumes:
-      - type: bind
-        source: ./containers/deconz/config
-        target: /root/.local/share/dresden-elektronik/deCONZ
-      - type: bind
-        source: ./containers/deconz/otau-config
-        target: /root/otau
-    devices:
-       - /dev/ttyACM0
-    ports:
-      - 8080:8080
-      - 8443:8443
-      - 5900:5900
-    environment:
-      DECONZ_WEB_PORT: 8080
-      DECONZ_WS_PORT: 8443
-      DEBUG_INFO: 0
-      DEBUG_APS: 0
-      DEBUG_ZCL: 0
-      DEBUG_ZDP: 0
-      DEBUG_OTAU: 0
-      TZ: Europe/Stockholm
-      DECONZ_VNC_MODE: 1
-      DECONZ_VNC_PORT: 5900
-      DECONZ_VNC_PASSWORD: changeme
-      DECONZ_UPNP: 0
-
   hass:
     image: homeassistant/raspberrypi4-64-homeassistant:2021.6.4
     container_name: hass
@@ -40,6 +9,8 @@ services:
       - type: bind
         source: ./containers/hass/config
         target: /config
+    devices:
+       - /dev/ttyACM0
     environment:
       TZ: Europe/Stockholm
 
