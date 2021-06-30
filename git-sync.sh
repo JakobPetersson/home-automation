@@ -4,48 +4,62 @@ set -eou > /dev/null
 
 THIS_DIR=$(cd "$(dirname "$0")"; pwd -P)
 
-cd "${THIS_DIR}"
-
 readonly LOCAL_BRANCH=main
 readonly REMOTE_BRANCH=origin/main
 
+#
+# Check if there are local changes in repo
+#
 git_local_changes() {
   local CHANGED_FILES
   CHANGED_FILES=$( git status --porcelain | wc -l )
   [ "${CHANGED_FILES}" -gt 0 ]
 }
 
+#
+# Write to git sync log-file
+#
 git_sync_log() {
   echo "$(date --iso-8601=seconds) | ${1}" >> "${THIS_DIR}/git-sync.log"
 }
 
+#
+#
+#
 git_sync() {
-  if git_local_changes; then
-    echo "There are local changes, skipping sync"
-    exit 0
-  fi
+  local _REPO_DIR="${1}"
 
-  echo "There are no local changes"
+  (
+    # cd into repo
+    cd "${_REPO_DIR}"
 
-  echo "Fetching"
-  git fetch
+    if git_local_changes; then
+      echo "There are local changes, skipping sync"
+      exit 0
+    fi
 
-  if git diff --exit-code "${LOCAL_BRANCH}" "${REMOTE_BRANCH}" > /dev/null; then
-    echo "Local branch equals remote branch"
-    exit 0
-  fi
+    echo "There are no local changes"
 
-  echo "Local branch differs from remote"
+    echo "Fetching"
+    git fetch
 
-  echo "Pulling"
-  git pull
-  
-  git_sync_log "Updated from git"
+    if git diff --exit-code "${LOCAL_BRANCH}" "${REMOTE_BRANCH}" > /dev/null; then
+      echo "Local branch equals remote branch"
+      exit 0
+    fi
 
-  echo "Updating containers"
-  ./dev.sh start
-  
-  git_sync_log "Containers restarted"
+    echo "Local branch differs from remote"
+
+    echo "Pulling"
+    git pull
+
+    git_sync_log "Updated from git"
+
+    echo "Updating containers"
+    ./dev.sh start
+
+    git_sync_log "Containers restarted"
+  )
 }
 
-git_sync
+git_sync "${THIS_DIR}"
