@@ -1,5 +1,7 @@
 import hassapi as hass
 
+import datetime
+
 class AreaButton(hass.Hass):
 
 	async def initialize(self):
@@ -35,12 +37,15 @@ class AreaButton(hass.Hass):
 
 	async def event_cb(self, event_name, data, kwargs):
 		command = data["command"]
+		time_fired = datetime.datetime.fromisoformat(data["metadata"]["time_fired"])
 
 		await self.cancel_dimmer_timer()
 		if command == "on":
-			await self.click_on()
+			#self.log("Click on")
+			await self.room.service_manual(time_fired, "on")
 		elif command == "off":
-			await self.click_off()
+			#self.log("Click off")
+			await self.room.service_manual(time_fired, "off")
 		elif command == "move_with_on_off":
 			self.dimmer_timer_handle = await self.run_every(
 				self.dim_up,
@@ -64,28 +69,18 @@ class AreaButton(hass.Hass):
 			self.dimmer_timer_handle = None
 
 
-	async def click_on(self):
-		#self.log("Click on")
-		if self.room:
-			await self.room.service_turn_on_manual()
-
-
-	async def click_off(self):
-		#self.log("Click off")
-		if self.room:
-			await self.room.service_turn_off_manual()
-
-
 	async def dim_up(self, kwargs):
 		#self.log("Dim up")
 		if self.room:
-			await self.room.service_dim_up_manual()
+			time_fired = datetime.datetime.utcnow()
+			await self.room.service_manual(time_fired, "dim_up")
 
 
 	async def dim_down(self, kwargs):
 		#self.log("Dim down")
 		if self.room:
-			await self.room.service_dim_down_manual()
+			time_fired = datetime.datetime.utcnow()
+			await self.room.service_manual(time_fired, "dim_down")
 
 
 	async def terminate(self):
