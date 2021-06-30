@@ -2,6 +2,7 @@ import hassapi as hass
 import copy
 
 import asyncio
+import datetime
 
 class Area(hass.Hass):
 
@@ -9,13 +10,14 @@ class Area(hass.Hass):
 
         self.area_id = self.args.get("area_id")
 
+        self.last_update = datetime.datetime.utcnow()
         self.task_1 = None
         self.waiting = False
 
         await self.init_sub_areas()
 
         self.state = {}
-        await self.update(None, {
+        await self.update(datetime.datetime.utcnow(), {
             "on": False,
             "kelvin": 3500,
             "brightness_pct": 100
@@ -62,17 +64,21 @@ class Area(hass.Hass):
 
     async def update(self, time_fired, state_update):
         self.log(time_fired)
+        
+        # Get new state by applying state update to current state
         new_state = {**self.state, **state_update}
 
-        if new_state != self.state:
+        # Perform actions on this area if state is changed
+        if time_fired < self.last_update:
+            self.log("Old update!")
+        elif new_state != self.state:
+            # Update state to new state
+            self.last_update = time_fired
             self.state = new_state
             self.log("Updated: {}".format(self.state))
-            await self._update_area(time_fired)
+            await self._update_area()
 
-        await self._update_sub_areas(time_fired, state_update)
-
-
-    async def _update_sub_areas(self, time_fired, state_update):
+        # Propagate state update to all sub areas
         for sub_area in self.sub_areas:
             await self.create_task(sub_area.update(time_fired, state_update))
 
@@ -80,7 +86,7 @@ class Area(hass.Hass):
     #
     # Update
     #
-    async def _update_area(self, time_fired):
+    async def _update_area(self):
         if not self.area_id:
             return
 
