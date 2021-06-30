@@ -1,6 +1,6 @@
 import hassapi as hass
 
-class MultiButton(hass.Hass):
+class AreaButton(hass.Hass):
 
 	async def initialize(self):
 		await self.init_button()
