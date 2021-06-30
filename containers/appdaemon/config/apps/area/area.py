@@ -55,22 +55,6 @@ class Area(hass.Hass):
                     "brightness_pct": max(1, self.state["brightness_pct"] - 5)
                 })
 
-
-    async def service_turn_on_manual(self, time_fired):
-        await self.service_manual(time_fired, "on")
-
-
-    async def service_turn_off_manual(self, time_fired):
-        await self.service_manual(time_fired, "off")
-
-
-    async def service_dim_up_manual(self, time_fired):
-        await self.service_manual(time_fired, "dim_up")
-
-
-    async def service_dim_down_manual(self, time_fired):
-        await self.service_manual(time_fired, "dim_down")
-
     #
     #
     #
