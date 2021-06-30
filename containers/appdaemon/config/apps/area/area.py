@@ -10,14 +10,14 @@ class Area(hass.Hass):
 
         self.area_id = self.args.get("area_id")
 
-        self.last_update = datetime.datetime.utcnow()
+        self.last_update = datetime.datetime.now(datetime.timezone.utc)
         self.task_1 = None
         self.waiting = False
 
         await self.init_sub_areas()
 
         self.state = {}
-        await self.update(datetime.datetime.utcnow(), {
+        await self.update(datetime.datetime.now(datetime.timezone.utc), {
             "on": False,
             "kelvin": 3500,
             "brightness_pct": 100
@@ -64,7 +64,7 @@ class Area(hass.Hass):
 
     async def update(self, time_fired, state_update):
         self.log(time_fired)
-        
+
         # Get new state by applying state update to current state
         new_state = {**self.state, **state_update}
 
