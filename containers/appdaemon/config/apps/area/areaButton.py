@@ -72,14 +72,14 @@ class AreaButton(hass.Hass):
 	async def dim_up(self, kwargs):
 		#self.log("Dim up")
 		if self.room:
-			time_fired = datetime.datetime.utcnow()
+			time_fired = datetime.datetime.now(datetime.timezone.utc)
 			await self.room.service_manual(time_fired, "dim_up")
 
 
 	async def dim_down(self, kwargs):
 		#self.log("Dim down")
 		if self.room:
-			time_fired = datetime.datetime.utcnow()
+			time_fired = datetime.datetime.now(datetime.timezone.utc)
 			await self.room.service_manual(time_fired, "dim_down")
 
 
