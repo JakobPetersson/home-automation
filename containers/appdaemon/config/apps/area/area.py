@@ -63,7 +63,7 @@ class Area(hass.Hass):
 
 
     async def update(self, time_fired, state_update):
-        self.log(time_fired)
+        #self.log(time_fired)
 
         # Get new state by applying state update to current state
         new_state = {**self.state, **state_update}
@@ -75,7 +75,7 @@ class Area(hass.Hass):
             # Update state to new state
             self.last_update = time_fired
             self.state = new_state
-            self.log("Updated: {}".format(self.state))
+            #self.log("Updated: {}".format(self.state))
             await self._update_area()
 
         # Propagate state update to all sub areas
