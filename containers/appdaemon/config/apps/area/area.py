@@ -1,8 +1,7 @@
 import hassapi as hass
-import copy
-
 import asyncio
 import datetime
+
 
 class Area(hass.Hass):
 
@@ -23,15 +22,15 @@ class Area(hass.Hass):
             "brightness_pct": 100
         })
 
-
     async def init_sub_areas(self):
         sub_areas_name = self.args.get("sub_areas") or []
         self.sub_areas = []
         for area_name in sub_areas_name:
             sub_area = await self.get_app(area_name)
-            self.log(sub_area)
+            if not sub_area:
+                self.log("Sub area not initialized, {}".format(area_name))
+                self.terminate()
             self.sub_areas.append(sub_area)
-
 
     #
     # Services (Called from  other apps)
@@ -39,18 +38,16 @@ class Area(hass.Hass):
 
     async def service_manual(self, time_fired, cmd_name):
         await self._service(time_fired, cmd_name)
-        
 
     async def service_automated(self, time_fired, cmd_name):
         await self._service(time_fired, cmd_name)
-        
-        
+
     #
     #
     #
 
     async def update(self, time_fired, state_update):
-        #self.log(time_fired)
+        # self.log(time_fired)
 
         # Get new state by applying state update to current state
         new_state = {**self.state, **state_update}
@@ -62,18 +59,17 @@ class Area(hass.Hass):
             # Update state to new state
             self.last_update = time_fired
             self.state = new_state
-            #self.log("Updated: {}".format(self.state))
+            # self.log("Updated: {}".format(self.state))
             await self._update_area()
 
         # Propagate state update to all sub areas
         for sub_area in self.sub_areas:
             await self.create_task(sub_area.update(time_fired, state_update))
 
+    #
+    #
+    #
 
-    #
-    #
-    #
-    
     async def _service(self, time_fired, cmd_name):
         if cmd_name == "on":
             await self.update(time_fired, {
@@ -94,8 +90,6 @@ class Area(hass.Hass):
                     "brightness_pct": max(1, self.state["brightness_pct"] - 5)
                 })
 
-                
-                
     async def _update_area(self):
         if not self.area_id:
             return
@@ -111,19 +105,18 @@ class Area(hass.Hass):
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_on",
-                    area_id = self.area_id,
-                    kelvin = self.state["kelvin"],
-                    brightness_pct = self.state["brightness_pct"]
+                    area_id=self.area_id,
+                    kelvin=self.state["kelvin"],
+                    brightness_pct=self.state["brightness_pct"]
                 )
             )
         else:
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_off",
-                    area_id = self.area_id
+                    area_id=self.area_id
                 )
             )
-
 
     async def terminate(self):
         pass
