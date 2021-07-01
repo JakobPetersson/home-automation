@@ -38,11 +38,11 @@ class Area(hass.Hass):
     #
 
     async def service_manual(self, time_fired, cmd_name):
-        self._service(time_fired, cmd_name)
+        await self._service(time_fired, cmd_name)
         
 
     async def service_automated(self, time_fired, cmd_name):
-        self._service(time_fired, cmd_name)
+        await self._service(time_fired, cmd_name)
         
         
     #
