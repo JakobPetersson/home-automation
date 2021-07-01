@@ -38,29 +38,16 @@ class Area(hass.Hass):
     #
 
     async def service_manual(self, time_fired, cmd_name):
-        if cmd_name == "on":
-            await self.update(time_fired, {
-                "on": True
-            })
-        elif cmd_name == "off":
-            await self.update(time_fired, {
-                "on": False
-            })
-        elif cmd_name == "dim_up":
-            await self.update(time_fired, {
-                "on": True,
-                "brightness_pct": min(100, self.state["brightness_pct"] + 5)
-            })
-        elif cmd_name == "dim_down":
-            if self.state["on"]:
-                await self.update(time_fired, {
-                    "brightness_pct": max(1, self.state["brightness_pct"] - 5)
-                })
+        self._service(time_fired, cmd_name)
+        
 
+    async def service_automated(self, time_fired, cmd_name):
+        self._service(time_fired, cmd_name)
+        
+        
     #
     #
     #
-
 
     async def update(self, time_fired, state_update):
         #self.log(time_fired)
@@ -84,8 +71,31 @@ class Area(hass.Hass):
 
 
     #
-    # Update
     #
+    #
+    
+    async def _service(self, time_fired, cmd_name):
+        if cmd_name == "on":
+            await self.update(time_fired, {
+                "on": True
+            })
+        elif cmd_name == "off":
+            await self.update(time_fired, {
+                "on": False
+            })
+        elif cmd_name == "dim_up":
+            await self.update(time_fired, {
+                "on": True,
+                "brightness_pct": min(100, self.state["brightness_pct"] + 5)
+            })
+        elif cmd_name == "dim_down":
+            if self.state["on"]:
+                await self.update(time_fired, {
+                    "brightness_pct": max(1, self.state["brightness_pct"] - 5)
+                })
+
+                
+                
     async def _update_area(self):
         if not self.area_id:
             return
