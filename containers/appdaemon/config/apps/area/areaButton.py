@@ -1,34 +1,13 @@
-import hassapi as hass
-
+import areaDevice
 import datetime
 
 
-class AreaButton(hass.Hass):
+class AreaButton(areaDevice.AreaDevice):
 
     async def initialize(self):
-        await self.init_area()
-        await self.init_device()
+        await super().initialize()
         await self.init_dimmer()
         self.dim_interval_s = 0.2
-
-    async def init_area(self):
-        self.area = None
-        area_name = self.args.get("area_name")
-        if area_name:
-            self.area = await self.get_app(area_name)
-            if not self.area:
-                self.log("Area not initialized, {}".format(area_name))
-                self.terminate()
-        else:
-            pass
-
-    async def init_device(self):
-        device_ieee = self.args.get("device_ieee")
-        self.event_listen_handle = await self.listen_event(
-            self.event_cb,
-            "zha_event",
-            device_ieee=device_ieee
-        )
 
     async def init_dimmer(self):
         self.dimmer_timer_handle = None
@@ -73,4 +52,4 @@ class AreaButton(hass.Hass):
             await self.area.service_manual(time_fired, "dim_down")
 
     async def terminate(self):
-        await self.cancel_listen_event(self.event_listen_handle)
+        await super().terminate()
