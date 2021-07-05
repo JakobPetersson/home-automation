@@ -16,7 +16,7 @@ class Area(hass.Hass):
         await self.init_sub_areas()
 
         self.light_state = {}
-        await self.update({
+        await self.update_light_state({
             "on": False,
             "kelvin": 3500,
             "brightness_pct": 100
@@ -46,7 +46,7 @@ class Area(hass.Hass):
     #
     #
 
-    async def update(self, light_state_update, time_fired):
+    async def update_light_state(self, light_state_update, time_fired):
         # self.log(time_fired)
 
         # Get new state by applying state update to current state
@@ -62,9 +62,9 @@ class Area(hass.Hass):
             # self.log("Updated: {}".format(self.light_state))
             await self._update_area()
 
-        # Propagate state update to all sub areas
+        # Propagate light state update to all sub areas
         for sub_area in self.sub_areas:
-            await self.create_task(sub_area.update(light_state_update, time_fired))
+            await self.create_task(sub_area.update_light_state(light_state_update, time_fired))
 
     #
     #
@@ -72,21 +72,21 @@ class Area(hass.Hass):
 
     async def _service(self, time_fired, cmd_name):
         if cmd_name == "on":
-            await self.update({
+            await self.update_light_state({
                 "on": True
             }, time_fired)
         elif cmd_name == "off":
-            await self.update({
+            await self.update_light_state({
                 "on": False
             }, time_fired)
         elif cmd_name == "dim_up":
-            await self.update({
+            await self.update_light_state({
                 "on": True,
                 "brightness_pct": min(100, self.light_state["brightness_pct"] + 5)
             }, time_fired)
         elif cmd_name == "dim_down":
             if self.light_state["on"]:
-                await self.update({
+                await self.update_light_state({
                     "brightness_pct": max(1, self.light_state["brightness_pct"] - 5)
                 }, time_fired)
 
