@@ -93,6 +93,7 @@ class Area(hass.Hass):
         if update_physical_lights:
             if self.task_1 and not self.task_1.done():
                 if self.waiting:
+                    self.log("Skipping")
                     return
                 else:
                     self.waiting = True
