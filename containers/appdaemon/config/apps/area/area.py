@@ -105,7 +105,7 @@ class Area(hass.Hass):
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_on",
-                    area_id=self.area_id,
+                    area_id=[self.area_id],
                     kelvin=self.state["kelvin"],
                     brightness_pct=self.state["brightness_pct"]
                 )
@@ -114,7 +114,7 @@ class Area(hass.Hass):
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_off",
-                    area_id=self.area_id
+                    area_id=[self.area_id]
                 )
             )
 
