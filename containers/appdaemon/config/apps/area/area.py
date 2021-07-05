@@ -62,9 +62,9 @@ class Area(hass.Hass):
             # self.log("Updated: {}".format(self.light_state))
             await self._update_area()
 
-        # Propagate light state update to all sub areas
+        # Propagate light state to all sub areas
         for sub_area in self.sub_areas:
-            await self.create_task(sub_area.update_light_state(light_state_update, time_fired))
+            await self.create_task(sub_area.update_light_state(self.light_state, time_fired))
 
     #
     #
