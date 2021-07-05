@@ -46,11 +46,11 @@ class Area(hass.Hass):
     #
     #
 
-    async def update(self, state_update, time_fired):
+    async def update(self, light_state_update, time_fired):
         # self.log(time_fired)
 
         # Get new state by applying state update to current state
-        new_state = {**self.light_state, **state_update}
+        new_state = {**self.light_state, **light_state_update}
 
         # Perform actions on this area if state is changed
         if time_fired < self.last_update:
@@ -64,7 +64,7 @@ class Area(hass.Hass):
 
         # Propagate state update to all sub areas
         for sub_area in self.sub_areas:
-            await self.create_task(sub_area.update(state_update, time_fired))
+            await self.create_task(sub_area.update(light_state_update, time_fired))
 
     #
     #
