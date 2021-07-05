@@ -37,10 +37,10 @@ class Area(hass.Hass):
     #
 
     async def service_manual(self, time_fired, cmd_name):
-        await self._service(time_fired, cmd_name)
+        await self._service(cmd_name, time_fired)
 
     async def service_automated(self, time_fired, cmd_name):
-        await self._service(time_fired, cmd_name)
+        await self._service(cmd_name, time_fired)
 
     #
     #
@@ -70,7 +70,7 @@ class Area(hass.Hass):
     #
     #
 
-    async def _service(self, time_fired, cmd_name):
+    async def _service(self, cmd_name, time_fired):
         if cmd_name == "on":
             await self.update_light_state({
                 "on": True
