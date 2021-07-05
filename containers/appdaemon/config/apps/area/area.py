@@ -90,11 +90,24 @@ class Area(hass.Hass):
 
         # Propagate light state to all sub areas
         for sub_area in self.sub_areas:
-            await self.create_task(sub_area.update_light_state(self.light_state, time_fired, True))
+            await self.create_task(sub_area.update_light_state(self.light_state, time_fired, False))
+
+    #
+    # Get the area id of this area and all its sub areas
+    #
+    async def get_area_ids(self):
+        area_ids = []
+
+        if self.area_id:
+            area_ids.append(self.area_id)
+
+        for sub_area in self.sub_areas:
+            area_ids.extend(await sub_area.get_area_ids())
+
+        return area_ids
 
     async def _update_area(self):
-        if not self.area_id:
-            return
+        area_ids = await self.get_area_ids()
 
         if self.task_1 and not self.task_1.done():
             if not self.waiting:
@@ -107,7 +120,7 @@ class Area(hass.Hass):
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_on",
-                    area_id=[self.area_id],
+                    area_id=area_ids,
                     kelvin=self.light_state["kelvin"],
                     brightness_pct=self.light_state["brightness_pct"]
                 )
@@ -116,7 +129,7 @@ class Area(hass.Hass):
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_off",
-                    area_id=[self.area_id]
+                    area_id=area_ids
                 )
             )
 
