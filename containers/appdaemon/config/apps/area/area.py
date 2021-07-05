@@ -15,7 +15,7 @@ class Area(hass.Hass):
 
         await self.init_sub_areas()
 
-        self.state = {}
+        self.light_state = {}
         await self.update(datetime.datetime.now(datetime.timezone.utc), {
             "on": False,
             "kelvin": 3500,
@@ -50,16 +50,16 @@ class Area(hass.Hass):
         # self.log(time_fired)
 
         # Get new state by applying state update to current state
-        new_state = {**self.state, **state_update}
+        new_state = {**self.light_state, **state_update}
 
         # Perform actions on this area if state is changed
         if time_fired < self.last_update:
             self.log("Old update!")
-        elif new_state != self.state:
+        elif new_state != self.light_state:
             # Update state to new state
             self.last_update = time_fired
-            self.state = new_state
-            # self.log("Updated: {}".format(self.state))
+            self.light_state = new_state
+            # self.log("Updated: {}".format(self.light_state))
             await self._update_area()
 
         # Propagate state update to all sub areas
@@ -82,12 +82,12 @@ class Area(hass.Hass):
         elif cmd_name == "dim_up":
             await self.update(time_fired, {
                 "on": True,
-                "brightness_pct": min(100, self.state["brightness_pct"] + 5)
+                "brightness_pct": min(100, self.light_state["brightness_pct"] + 5)
             })
         elif cmd_name == "dim_down":
-            if self.state["on"]:
+            if self.light_state["on"]:
                 await self.update(time_fired, {
-                    "brightness_pct": max(1, self.state["brightness_pct"] - 5)
+                    "brightness_pct": max(1, self.light_state["brightness_pct"] - 5)
                 })
 
     async def _update_area(self):
@@ -101,13 +101,13 @@ class Area(hass.Hass):
                 await asyncio.wait_for(self.task_1, None)
                 self.waiting = False
 
-        if self.state["on"]:
+        if self.light_state["on"]:
             self.task_1 = await self.create_task(
                 self.call_service(
                     "light/turn_on",
                     area_id=[self.area_id],
-                    kelvin=self.state["kelvin"],
-                    brightness_pct=self.state["brightness_pct"]
+                    kelvin=self.light_state["kelvin"],
+                    brightness_pct=self.light_state["brightness_pct"]
                 )
             )
         else:
