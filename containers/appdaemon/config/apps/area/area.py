@@ -73,24 +73,34 @@ class Area(hass.Hass):
     async def update_light_state(self, light_state_update, time_fired, update_physical_lights=True):
         # self.log(time_fired)
 
-        # Get new state by applying state update to current state
-        new_state = {**self.light_state, **light_state_update}
-
         # Perform actions on this area if state is changed
         if time_fired < self.last_update:
             self.log("Old update!")
-        elif new_state != self.light_state:
-            # Update state to new state
-            self.last_update = time_fired
-            self.light_state = new_state
-            # self.log("Updated: {}".format(self.light_state))
+            return
 
-            if update_physical_lights:
-                await self._update_area()
+        # Get new state by applying state update to current state
+        new_state = {**self.light_state, **light_state_update}
+
+        # Update state to new state
+        self.last_update = time_fired
+        self.light_state = new_state
+        # self.log("Updated: {}".format(self.light_state))
 
         # Propagate light state to all sub areas
         for sub_area in self.sub_areas:
             await self.create_task(sub_area.update_light_state(self.light_state, time_fired, False))
+
+        if update_physical_lights:
+            if self.task_1 and not self.task_1.done():
+                if self.waiting:
+                    return
+                else:
+                    self.waiting = True
+                    self.log("Waiting")
+                    await asyncio.wait_for(self.task_1, None)
+                    self.waiting = False
+
+            self.task_1 = await self.create_task(self._update_area())
 
     #
     # Get the area id of this area and all its sub areas
@@ -106,31 +116,23 @@ class Area(hass.Hass):
 
         return area_ids
 
+    #
+    # Call HASS to update lights in area
+    #
     async def _update_area(self):
         area_ids = await self.get_area_ids()
 
-        if self.task_1 and not self.task_1.done():
-            if not self.waiting:
-                self.waiting = True
-                self.log("Waiting")
-                await asyncio.wait_for(self.task_1, None)
-                self.waiting = False
-
         if self.light_state["on"]:
-            self.task_1 = await self.create_task(
-                self.call_service(
-                    "light/turn_on",
-                    area_id=area_ids,
-                    kelvin=self.light_state["kelvin"],
-                    brightness_pct=self.light_state["brightness_pct"]
-                )
+            await self.call_service(
+                "light/turn_on",
+                area_id=area_ids,
+                kelvin=self.light_state["kelvin"],
+                brightness_pct=self.light_state["brightness_pct"]
             )
         else:
-            self.task_1 = await self.create_task(
-                self.call_service(
-                    "light/turn_off",
-                    area_id=area_ids
-                )
+            await self.call_service(
+                "light/turn_off",
+                area_id=area_ids
             )
 
     async def terminate(self):
