@@ -16,11 +16,11 @@ class Area(hass.Hass):
         await self.init_sub_areas()
 
         self.light_state = {}
-        await self.update(datetime.datetime.now(datetime.timezone.utc), {
+        await self.update({
             "on": False,
             "kelvin": 3500,
             "brightness_pct": 100
-        })
+        }, datetime.datetime.now(datetime.timezone.utc))
 
     async def init_sub_areas(self):
         sub_areas_name = self.args.get("sub_areas") or []
@@ -46,7 +46,7 @@ class Area(hass.Hass):
     #
     #
 
-    async def update(self, time_fired, state_update):
+    async def update(self, state_update, time_fired):
         # self.log(time_fired)
 
         # Get new state by applying state update to current state
@@ -64,7 +64,7 @@ class Area(hass.Hass):
 
         # Propagate state update to all sub areas
         for sub_area in self.sub_areas:
-            await self.create_task(sub_area.update(time_fired, state_update))
+            await self.create_task(sub_area.update(state_update, time_fired))
 
     #
     #
@@ -72,23 +72,23 @@ class Area(hass.Hass):
 
     async def _service(self, time_fired, cmd_name):
         if cmd_name == "on":
-            await self.update(time_fired, {
+            await self.update({
                 "on": True
-            })
+            }, time_fired)
         elif cmd_name == "off":
-            await self.update(time_fired, {
+            await self.update({
                 "on": False
-            })
+            }, time_fired)
         elif cmd_name == "dim_up":
-            await self.update(time_fired, {
+            await self.update({
                 "on": True,
                 "brightness_pct": min(100, self.light_state["brightness_pct"] + 5)
-            })
+            }, time_fired)
         elif cmd_name == "dim_down":
             if self.light_state["on"]:
-                await self.update(time_fired, {
+                await self.update({
                     "brightness_pct": max(1, self.light_state["brightness_pct"] - 5)
-                })
+                }, time_fired)
 
     async def _update_area(self):
         if not self.area_id:
