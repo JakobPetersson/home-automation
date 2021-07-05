@@ -46,9 +46,9 @@ class AreaButton(AreaDevice):
 
         await self.cancel_dimmer_timer()
         if command == "on":
-            await self.area.service_manual(time_fired, "on")
+            await self.area.service_manual("on", time_fired)
         elif command == "off":
-            await self.area.service_manual(time_fired, "off")
+            await self.area.service_manual("off", time_fired)
         elif command == "move_with_on_off":
             self.dimmer_timer_handle = await self.run_every(
                 self.dim_up,
@@ -72,12 +72,12 @@ class AreaButton(AreaDevice):
     async def dim_up(self, kwargs):
         if self.area:
             time_fired = datetime.datetime.now(datetime.timezone.utc)
-            await self.area.service_manual(time_fired, "dim_up")
+            await self.area.service_manual("dim_up", time_fired)
 
     async def dim_down(self, kwargs):
         if self.area:
             time_fired = datetime.datetime.now(datetime.timezone.utc)
-            await self.area.service_manual(time_fired, "dim_down")
+            await self.area.service_manual("dim_down", time_fired)
 
     async def terminate(self):
         await super().terminate()
@@ -95,9 +95,9 @@ class AreaDoorSensor(AreaDevice):
 
         if command == "attribute_updated" and args["attribute_name"] == "on_off":
             if args["value"] == 1:
-                await self.area.service_automated(time_fired, "on")
+                await self.area.service_automated("on", time_fired)
             if args["value"] == 0:
-                await self.area.service_automated(time_fired, "off")
+                await self.area.service_automated("off", time_fired)
 
     async def terminate(self):
         await super().terminate()

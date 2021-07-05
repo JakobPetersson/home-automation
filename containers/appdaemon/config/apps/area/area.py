@@ -36,10 +36,10 @@ class Area(hass.Hass):
     # Services (Called from  other apps)
     #
 
-    async def service_manual(self, time_fired, cmd_name):
+    async def service_manual(self, cmd_name, time_fired):
         await self._service(cmd_name, time_fired)
 
-    async def service_automated(self, time_fired, cmd_name):
+    async def service_automated(self, cmd_name, time_fired):
         await self._service(cmd_name, time_fired)
 
     #
