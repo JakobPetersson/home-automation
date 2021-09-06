@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   hass:
-    image: homeassistant/raspberrypi4-64-homeassistant:2021.6.6
+    image: homeassistant/raspberrypi4-64-homeassistant:2021.9.3
     container_name: hass
     restart: always
     network_mode: host
