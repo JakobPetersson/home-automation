@@ -27,6 +27,3 @@ services:
     env_file:
       - ./containers/appdaemon/appdaemon.env
     #command: -D DEBUG
-    environment:
-      HA_URL: http://rpi-home:8123
-      DASH_URL: http://rpi-home:5050
