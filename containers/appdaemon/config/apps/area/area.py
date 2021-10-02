@@ -14,6 +14,7 @@ class Area(hass.Hass):
         self.waiting = False
 
         await self.init_sub_areas()
+        await self.init_area_lights()
 
         self.light_state = {}
         await self.update_light_state({
@@ -21,6 +22,39 @@ class Area(hass.Hass):
             "kelvin": 3500,
             "brightness_pct": 100
         }, datetime.datetime.now(datetime.timezone.utc))
+
+
+    async def init_area_lights(self):
+        all_state = await self.get_state()
+
+        for entity_id in all_state:
+            device_name, entity_name = await self.split_entity(entity_id)
+
+            # Require entity name to start with light.<area_id>*
+            if device_name != "light" or not entity_name.startswith(self.area_id):
+                continue
+
+            self.log("Area light {}".format(entity_id))
+            await self.init_light(all_state[entity_id])
+
+
+    async def init_light(self, entity):
+        pass
+#        event_listen_handle = await self.listen_state(
+#            self.light_state_cb,
+#            entity["entity_id"],
+#            attribute="all"
+#        )
+
+
+    async def light_state_cb(self, entity, attribute, old, new, kwargs):
+        pass
+        self.log("light_state_cb")
+        self.log("Entity: {}".format(entity))
+        self.log("Attr: {}".format(attribute))
+        self.log("Old: {}".format(old))
+        self.log("New: {}".format(new))
+        
 
     async def init_sub_areas(self):
         sub_areas_name = self.args.get("sub_areas") or []
