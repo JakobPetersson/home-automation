@@ -25,6 +25,9 @@ class Area(hass.Hass):
 
 
     async def init_area_lights(self):
+        if not self.area_id:
+            return
+
         all_state = await self.get_state()
 
         for entity_id in all_state:
