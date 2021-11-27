@@ -35,10 +35,10 @@ class AreaButton(AreaDevice):
     async def initialize(self):
         await super().initialize()
         await self.init_dimmer()
-        self.dim_interval_s = 0.2
 
     async def init_dimmer(self):
         self.dimmer_timer_handle = None
+        self.dimmer_interval_s = 0.2
 
     async def event_cb(self, event_name, data, kwargs):
         if not "command" in data:
@@ -56,13 +56,13 @@ class AreaButton(AreaDevice):
             self.dimmer_timer_handle = await self.run_every(
                 self.dim_up,
                 "now",
-                self.dim_interval_s
+                self.dimmer_interval_s
             )
         elif command == "move":
             self.dimmer_timer_handle = await self.run_every(
                 self.dim_down,
                 "now",
-                self.dim_interval_s
+                self.dimmer_interval_s
             )
         elif command == "stop":
             pass
