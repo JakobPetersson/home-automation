@@ -59,19 +59,55 @@ class Area(hass.Hass):
         self.log("New: {}".format(new))
         
 
+    #
+    # Init sub areas
+    #
     async def init_sub_areas(self):
-        sub_areas_name = self.args.get("sub_areas") or []
+        # Initialize local variable to keep references to sub areas
         self.sub_areas = []
-        for area_name in sub_areas_name:
+
+        # Initiaize local variable to keep reference to super area
+        self.super_area = None
+        self.super_area_name = None
+
+        # Get argument for sub areas
+        sub_areas_names = self.args.get("sub_areas") or []
+
+        # Loop over all sub area names and get references to the apps
+        for area_name in sub_areas_names:
             sub_area = await self.get_app(area_name)
             if not sub_area:
-                self.log("Sub area not initialized, {}".format(area_name))
+                # Fail to initalize if sub area is not found
+                self.log("Failed to intialize sub area: {}".format(area_name))
                 self.terminate()
+            
+            # Store reference to sub area
             self.sub_areas.append(sub_area)
+
+            # Register ourself as parent to sub area
+            await sub_area.service_register_super_area(self.name)
 
     #
     # Services (Called from  other apps)
     #
+
+    #
+    # Register as super area to this area.
+    # Can only be called once. (Single super area, tree structure)
+    #
+    async def service_register_super_area(self, super_area_name):
+        if self.super_area != None:
+            # Do not allow multiple calls to register super area
+            self.log("Register super area has already been called, now called with {}".format(area_name))
+            self.terminate()
+
+        self.super_area_name = super_area_name
+        self.super_area = await self.get_app(super_area_name)
+        
+        if not self.super_area:
+            # Failed to initalize super area
+            self.log("Failed to initialized super area: {}".format(super_area_name))
+            self.terminate()
 
     async def service_manual(self, cmd_name, time_fired):
         await self._service(cmd_name, time_fired)
