@@ -109,9 +109,17 @@ class Area(hass.Hass):
             self.log("Failed to initialized super area: {}".format(super_area_name))
             self.terminate()
 
+    #
+    # Send manual command to area.
+    # Will affect sub areas as well.
+    #
     async def service_manual(self, cmd_name, time_fired):
         await self._service(cmd_name, time_fired)
 
+    #
+    # Send automated command to area.
+    # Will affect sub areas as well.
+    #
     async def service_automated(self, cmd_name, time_fired):
         await self._service(cmd_name, time_fired)
 
