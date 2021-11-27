@@ -41,6 +41,9 @@ class AreaButton(AreaDevice):
         self.dimmer_timer_handle = None
 
     async def event_cb(self, event_name, data, kwargs):
+        if not "command" in data:
+            return
+        
         command = data["command"]
         time_fired = datetime.datetime.fromisoformat(data["metadata"]["time_fired"])
 
@@ -89,6 +92,9 @@ class AreaDoorSensor(AreaDevice):
         await super().initialize()
 
     async def event_cb(self, event_name, data, kwargs):
+        if not "command" in data:
+            return
+        
         command = data["command"]
         args = data["args"]
         time_fired = datetime.datetime.fromisoformat(data["metadata"]["time_fired"])
