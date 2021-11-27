@@ -148,6 +148,11 @@ class AreaButton(AreaDevice):
                 await self.area.service_manual("on", time_fired)
             elif command == "off":
                 await self.area.service_manual("off", time_fired)
+        elif count >= 3:
+            if command == "on":
+                await self.area.service_super_manual("on", time_fired)
+            elif command == "off":
+                await self.area.service_super_manual("off", time_fired)
 
     async def cancel_dimmer_timer(self):
         if self.dimmer_timer_handle != None:

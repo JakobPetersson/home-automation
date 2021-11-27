@@ -110,6 +110,30 @@ class Area(hass.Hass):
             self.terminate()
 
     #
+    # Send manual command to super area.
+    # Will bubble up to super area until it reaches the top.
+    #
+    async def service_super_manual(self, cmd_name, time_fired):
+        if self.super_area != None:
+            # Forward to super area
+            await self.super_area.service_super_manual(cmd_name, time_fired)
+        else:
+            # We are the topmost area
+            await self._service(cmd_name, time_fired)
+
+    #
+    # Send automated command to super area.
+    # Will bubble up to super area until it reaches the top.
+    #
+    async def service_super_automated(self, cmd_name, time_fired):
+        if self.super_area != None:
+            # Forward to super area
+            await self.super_area.service_super_automated(cmd_name, time_fired)
+        else:
+            # We are the topmost area
+            await self._service(cmd_name, time_fired)
+
+    #
     # Send manual command to area.
     # Will affect sub areas as well.
     #
