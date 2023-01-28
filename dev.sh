@@ -6,28 +6,28 @@ COMPOSE_PATH="$( cd "$(dirname "$0")" ; pwd -P )/docker-compose.yml"
 
 pull() {
   echo "Pulling"
-  docker-compose -f "$COMPOSE_PATH" pull
+  docker compose -f "$COMPOSE_PATH" pull
 }
 
 build() {
   echo "Building"
-  docker-compose -f "$COMPOSE_PATH" build
+  docker compose -f "$COMPOSE_PATH" build
 }
 
 start() {
   echo "Starting"
-  docker-compose -f "$COMPOSE_PATH" up -d --remove-orphans
+  docker compose -f "$COMPOSE_PATH" up -d --remove-orphans
 }
 
 stop() {
   echo "Stopping"
-  docker-compose -f "$COMPOSE_PATH" stop
+  docker compose -f "$COMPOSE_PATH" stop
 }
 
 remove() {
   stop
   echo "Removing"
-  docker-compose -f "$COMPOSE_PATH" rm -f
+  docker compose -f "$COMPOSE_PATH" rm -f
 }
 
 reset() {
@@ -39,7 +39,7 @@ reset() {
 
 logs() {
   echo "Logs"
-  docker-compose -f "$COMPOSE_PATH" logs -f
+  docker compose -f "$COMPOSE_PATH" logs -f
 }
 
 for ARG in "$@"; do
