@@ -31,7 +31,7 @@ setup_docker() {
   fi
 
   echo "Installing docker"
-  sudo snap install docker
+  #sudo snap install docker
 }
 
 setup_docker_group() {
