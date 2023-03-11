@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   hass:
-    image: homeassistant/raspberrypi4-64-homeassistant:2023.3.3
+    image: homeassistant/raspberrypi4-64-homeassistant:2023.3.3@sha256:f0d2db2dd30b41fe93f87d4efef9ea96be95838528d79d0503f53ee7e970ba5b
     container_name: hass
     restart: always
     network_mode: host
@@ -15,7 +15,7 @@ services:
       TZ: Europe/Stockholm
 
   appdaemon:
-    image: acockburn/appdaemon:4.2.3
+    image: acockburn/appdaemon:4.2.3@sha256:61d11e634e351d6c3a5eb0fe25999294918e2613f87c96e06ee893b863bb23d5
     container_name: appdaemon
     restart: always
     volumes:
