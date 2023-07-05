@@ -15,7 +15,7 @@ services:
       TZ: Europe/Stockholm
 
   appdaemon:
-    image: acockburn/appdaemon:4.2.3@sha256:61d11e634e351d6c3a5eb0fe25999294918e2613f87c96e06ee893b863bb23d5
+    image: acockburn/appdaemon:4.4.2@sha256:7ca1ba3ead7c3c09ad7166c74a792340b436fe720512e19a2a4b1e0e7de928fe
     container_name: appdaemon
     restart: always
     volumes:
