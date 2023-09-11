@@ -55,7 +55,7 @@ git_sync() {
 
     git_sync_log "Updated from git"
 
-    echo "Updating containers"
+    git_sync_log "Updating containers"
     ./dev.sh start
 
     git_sync_log "Containers restarted"
