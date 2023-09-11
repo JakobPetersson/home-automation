@@ -1,7 +1,8 @@
 version: "3.8"
 services:
   hass:
-    image: homeassistant/home-assistant:2023.8.3@sha256:1ffe092ad591cc7391279dc0e32d84f7153d15cd3d410cddcdcccca4e3926b28
+    # linux/arm64 version
+    image: homeassistant/home-assistant:2023.9.1@sha256:f74e9068b751cb7795eccd19b88de16fbd197bcd0f56695974ec1b73d384cf5b
     container_name: hass
     restart: always
     network_mode: host
