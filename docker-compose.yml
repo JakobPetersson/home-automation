@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   hass:
     # linux/arm64 version
