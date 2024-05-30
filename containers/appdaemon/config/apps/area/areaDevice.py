@@ -48,7 +48,7 @@ class AreaButton(AreaDevice):
     async def event_cb(self, event_name, data, kwargs):
         if not "command" in data:
             return
-        
+
         command = data["command"]
         time_fired = datetime.datetime.fromisoformat(data["metadata"]["time_fired"])
 
@@ -56,7 +56,7 @@ class AreaButton(AreaDevice):
         if command == "on":
             await self.click_register(command, time_fired)
         elif command == "off":
-            await self.click_register(command, time_fired)            
+            await self.click_register(command, time_fired)
         elif command == "move_with_on_off":
             await self.click_reset()
             self.dimmer_timer_handle = await self.run_every(
@@ -92,12 +92,12 @@ class AreaButton(AreaDevice):
             self.click_time_fired = time_fired
 
         # Increment count
-        self.click_count+=1
+        self.click_count += 1
 
         # Cancel and schedule new callback
         await self.click_cb_cancel()
         await self.click_cb_schedule()
-        
+
     #
     # Reset click logic
     #
@@ -131,7 +131,7 @@ class AreaButton(AreaDevice):
     async def click_cb(self, kwargs):
         # Always cancel further callbacks if we reach it (timed out)
         await self.click_cb_cancel()
-        
+
         if self.click_count > 1:
             # Only handle multi-clicks
             await self.click_do(self.click_command, self.click_time_fired, self.click_count)
@@ -181,7 +181,7 @@ class AreaDoorSensor(AreaDevice):
     async def event_cb(self, event_name, data, kwargs):
         if not "command" in data:
             return
-        
+
         command = data["command"]
         args = data["args"]
         time_fired = datetime.datetime.fromisoformat(data["metadata"]["time_fired"])
