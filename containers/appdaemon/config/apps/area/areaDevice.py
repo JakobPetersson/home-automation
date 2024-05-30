@@ -57,20 +57,20 @@ class AreaButton(AreaDevice):
             await self.click_register(command, time_fired)
         elif command == "off":
             await self.click_register(command, time_fired)
-        elif command == "move_with_on_off":
-            await self.click_reset()
-            self.dimmer_timer_handle = await self.run_every(
-                self.dim_up,
-                "now",
-                self.dimmer_interval_s
-            )
-        elif command == "move":
-            await self.click_reset()
-            self.dimmer_timer_handle = await self.run_every(
-                self.dim_down,
-                "now",
-                self.dimmer_interval_s
-            )
+        # elif command == "move_with_on_off":
+        #     await self.click_reset()
+        #     self.dimmer_timer_handle = await self.run_every(
+        #         self.dim_up,
+        #         "now",
+        #         self.dimmer_interval_s
+        #     )
+        # elif command == "move":
+        #     await self.click_reset()
+        #     self.dimmer_timer_handle = await self.run_every(
+        #         self.dim_down,
+        #         "now",
+        #         self.dimmer_interval_s
+        #     )
         elif command == "stop":
             await self.click_reset()
 
