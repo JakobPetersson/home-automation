@@ -31,9 +31,3 @@ and add:
 ```sh
 */1 * * * * PATH=$PATH::/snap/bin <ABSOLUTE_PATH_TO_REPO>/git-sync.sh >> /dev/null 2>&1
 ```
-
-## Scripts
-
-### dev.sh
-
-`dev.sh` is a simple utility to control the Docker Compose setup.
