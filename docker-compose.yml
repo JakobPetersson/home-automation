@@ -10,7 +10,6 @@ services:
         source: ./containers/hass/config
         target: /config
     devices:
-       - /dev/ttyACM0
        - /dev/ttyUSB0
     environment:
       TZ: Europe/Stockholm
